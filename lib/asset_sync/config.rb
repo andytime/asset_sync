@@ -62,8 +62,8 @@ module AssetSync
       self.ignored_files = []
       self.custom_headers = {}
       self.enabled = true
-      self.allow_origin = ""
-      self.origin = ""
+      self.rackspace_allow_origin = ""
+      self.rackspace_origin = ""
       self.run_on_precompile = true
       self.cdn_distribution_id = nil
       self.invalidate = []
