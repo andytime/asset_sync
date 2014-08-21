@@ -76,7 +76,7 @@ module AssetSync
         elsif File.exists?(self.config.manifest_path)
           log "Using: Manifest #{self.config.manifest_path}"
           yml = YAML.load(IO.read(self.config.manifest_path))
-   
+
           return yml.map do |original, compiled|
             # Upload font originals and compiled
             if original =~ /^.+(eot|svg|ttf|woff)$/
@@ -160,6 +160,18 @@ module AssetSync
 
       gzipped = "#{path}/#{f}.gz"
       ignore = false
+
+      if config.rackspace_allow_origin.present?
+        file.merge!({
+                    :access_control_allow_origin => config.rackspace_allow_origin
+                  })
+      end
+
+      if config.rackspace_origin.present?
+        file.merge!({
+                    :origin => config.rackspace_origin
+                  })
+      end
 
       if config.gzip? && File.extname(f) == ".gz"
         # Don't bother uploading gzipped assets if we are in gzip_compression mode

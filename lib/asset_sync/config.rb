@@ -11,6 +11,8 @@ module AssetSync
     attr_accessor :fail_silently
     attr_accessor :log_silently
     attr_accessor :always_upload
+    attr_accessor :always_upload_all
+    attr_accessor :warn_on_failure
     attr_accessor :ignored_files
     attr_accessor :prefix
     attr_accessor :public_path
@@ -19,6 +21,7 @@ module AssetSync
     attr_accessor :run_on_precompile
     attr_accessor :invalidate
     attr_accessor :cdn_distribution_id
+    attr_accessor :run_on_precompile
 
     # FOG configuration
     attr_accessor :fog_provider          # Currently Supported ['AWS', 'Rackspace']
@@ -29,7 +32,7 @@ module AssetSync
     attr_accessor :aws_access_key_id, :aws_secret_access_key, :aws_reduced_redundancy, :aws_iam_roles
 
     # Rackspace
-    attr_accessor :rackspace_username, :rackspace_api_key, :rackspace_auth_url
+    attr_accessor :rackspace_username, :rackspace_api_key, :rackspace_auth_url, :rackspace_origin, :rackspace_allow_origin
 
     # Google Storage
     attr_accessor :google_storage_secret_access_key, :google_storage_access_key_id
@@ -54,12 +57,17 @@ module AssetSync
       self.fail_silently = false
       self.log_silently = true
       self.always_upload = []
+      self.always_upload_all = false
+      self.warn_on_failure = false
       self.ignored_files = []
       self.custom_headers = {}
       self.enabled = true
+      self.allow_origin = ""
+      self.origin = ""
       self.run_on_precompile = true
       self.cdn_distribution_id = nil
       self.invalidate = []
+      self.run_on_precompile = true
       load_yml! if defined?(Rails) && yml_exists?
     end
 
@@ -146,6 +154,8 @@ module AssetSync
       self.rackspace_username     = yml["rackspace_username"]
       self.rackspace_auth_url     = yml["rackspace_auth_url"] if yml.has_key?("rackspace_auth_url")
       self.rackspace_api_key      = yml["rackspace_api_key"]
+      self.rackspace_allow_origin           = yml["allow_origin"] if yml.has_key?("allow_origin")
+      self.rackspace_origin                 = yml["origin"] if yml.has_key?("origin")
       self.google_storage_secret_access_key = yml["google_storage_secret_access_key"]
       self.google_storage_access_key_id     = yml["google_storage_access_key_id"]
       self.existing_remote_files  = yml["existing_remote_files"] if yml.has_key?("existing_remote_files")
@@ -153,6 +163,8 @@ module AssetSync
       self.manifest               = yml["manifest"] if yml.has_key?("manifest")
       self.fail_silently          = yml["fail_silently"] if yml.has_key?("fail_silently")
       self.always_upload          = yml["always_upload"] if yml.has_key?("always_upload")
+      self.always_upload_all      = yml["always_upload_all"] if yml.has_key?("always_upload")
+      self.warn_on_failure        = yml["warn_on_failure"] if yml.has_key?("warn_on_failure")
       self.ignored_files          = yml["ignored_files"] if yml.has_key?("ignored_files")
       self.custom_headers          = yml["custom_headers"] if yml.has_key?("custom_headers")
       self.run_on_precompile      = yml["run_on_precompile"] if yml.has_key?("run_on_precompile")

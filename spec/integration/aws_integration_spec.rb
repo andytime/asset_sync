@@ -23,12 +23,12 @@ describe "AssetSync" do
     @prefix = SecureRandom.hex(6)
   end
 
-  let(:app_js_regex){ 
-    /#{@prefix}\/application-[a-zA-Z0-9]*.js$/ 
+  let(:app_js_regex){
+    /#{@prefix}\/application-[a-zA-Z0-9]*.js$/
   }
 
-  let(:app_js_gz_regex){ 
-    /#{@prefix}\/application-[a-zA-Z0-9]*.js.gz$/ 
+  let(:app_js_gz_regex){
+    /#{@prefix}\/application-[a-zA-Z0-9]*.js.gz$/
   }
 
   let(:files){ bucket(@prefix).files }
@@ -42,7 +42,7 @@ describe "AssetSync" do
   end
 
   it "sync" do
-    execute "rake ASSET_SYNC_PREFIX=#{@prefix} assets:precompile"
+    execute "rake FOG_PROVIDER=AWS ASSET_SYNC_PREFIX=#{@prefix} assets:precompile"
 
     files = bucket(@prefix).files
 
@@ -58,12 +58,12 @@ describe "AssetSync" do
   end
 
   it "sync with enabled=false" do
-    execute "rake ASSET_SYNC_PREFIX=#{@prefix} ASSET_SYNC_ENABLED=false assets:precompile"
+    execute "rake FOG_PROVIDER=AWS ASSET_SYNC_PREFIX=#{@prefix} ASSET_SYNC_ENABLED=false assets:precompile"
     expect(bucket(@prefix).files.size).to eq(0)
   end
 
   it "sync with gzip_compression=true" do
-    execute "rake ASSET_SYNC_PREFIX=#{@prefix} ASSET_SYNC_GZIP_COMPRESSION=true assets:precompile"
+    execute "rake FOG_PROVIDER=AWS ASSET_SYNC_PREFIX=#{@prefix} ASSET_SYNC_GZIP_COMPRESSION=true assets:precompile"
     # bucket(@prefix).files.size.should == 3
 
     app_js_path = files.select{ |f| f.key =~ app_js_regex }.first
