@@ -57,11 +57,11 @@ describe AssetSync do
     end
 
     it "should set origin rackspace_origin" do
-      AssetSync.config.rackspace_origin.should == "mysite.com"
+      expect(AssetSync.config.rackspace_origin).to eq("mysite.com")
     end
 
     it "should set allow origin rackspace_allow_origin" do
-      AssetSync.config.rackspace_allow_origin.should == "*"
+      expect(AssetSync.config.rackspace_allow_origin).to eq("*")
     end
 
   end
@@ -98,11 +98,11 @@ describe AssetSync do
     end
 
     it "should set origin rackspace_origin" do
-      AssetSync.config.rackspace_origin.should == "mysite.com"
+      expect(AssetSync.config.rackspace_origin).to eq("mysite.com")
     end
 
     it "should set allow origin rackspace_allow_origin" do
-      AssetSync.config.rackspace_allow_origin.should == "*"
+      expect(AssetSync.config.rackspace_allow_origin).to eq("*")
     end
 
   end
